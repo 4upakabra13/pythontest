@@ -14,7 +14,9 @@ class Person:
     def __init__(self, first_name, last_name, age):
         self.first_name = first_name
         self.last_name = last_name
-        self.age == age
+        
+        # changed == to =
+        self.age = age
         self.id = self.increase_count()
 
     # This method should not be modified.
@@ -22,21 +24,30 @@ class Person:
         time.sleep(1)
         print(f"Hello, my first name is {self.first_name} and I am {self.age} years old.")
 
-    def increase_count():
+    # added a parameter to increase_count
+    def increase_count(x):
         Person.people_count += 1
         return Person.people_count
 
 def main():
     threads = []
     for p in people:
-        x = Person(p["first_name"], p["age"], p["last_name"])
+
+        # Changed the order of last_name and age
+        x = Person(p["first_name"], p["last_name"], p["age"])
         threads.append(threading.Thread(target=x.introduce))
-        
+
+    # added thread.join() to wait until a thread ends before starting a new one
     for thread in threads:
         thread.start()
-    
+        thread.join()
+
+
     print(f"Number of people created: {Person.people_count}")
+
+
     return
 
-if __name__ == "main":
+# Added double underscore to "main"
+if __name__ == "__main__":
     main()
