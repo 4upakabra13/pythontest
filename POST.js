@@ -1,27 +1,42 @@
 const AWS = require("aws-sdk");
-const ddb = new AWS.DynamoDB.DocumentClient({region: 'us-west-2'});
+const ddb = new AWS.DynamoDB.DocumentClient({region: 'us-east-1'});
 
-exports.handler = async (e, context, callback) => {
-  const requestId = context.awsRequestId;
-  await addUser(requestId).then(() =>{
-    callback(null, {
-      statusCode: 201,
-      body: '',
-    })
-  }).catch((err) => {
-    console.error(err)
-  });  
-};
+exports.handler = async (event, context, callback) => {
+    const requestId = context.awsRequestId;
+    if(event.user_id && event.fullname && event.age) {
+    await createUser(requestId, event).then(() => {
+        callback(null, {
+            statusCode:201,
+            body: '',
+            headers: {
+                'Access-Control-Allow-Origin' : '*'
+                }
+        })
+    }).catch((err) => {
+        console.error(err)
+    });
+    }else{
+        callback(null, {
+            statusCode:404,
+            body: 'Bad Request',
+            headers: {
+                'Access-Control-Allow-Origin' : '*'
+                }
+            });
+        }
+    };
+    
 
-function addUser(requestId) {
+function createUser(requestId, event) {
   const params = {
-    TableName: 'users',
-    // I didn't know how to make a proper user input so just included a static example
+    TableName: "users",
     Item: {
-      'user_id': requestId,
-      'Name': 'Nick',
-      'Age': '90'
+        'user_id' : requestId,
+        'fullname': event.fullname,
+        'age': event.age
     }
+    
+    
   }
-  return ddb.put(params).promise();
-}
+ return ddb.put(params).promise();
+};

@@ -1,0 +1,50 @@
+
+<html>
+	<script>
+		async function getUsers() {
+			fetch( 'https://8kt8ojhp10.execute-api.us-east-1.amazonaws.com/v8/users',  {
+				method: 'GET'
+			  })
+			.then(response => response.json())
+			.then((response) => {
+                console.log(response.body);
+                response.body.forEach(element => {
+                    document.getElementById("user_id").innerHTML += "<p>"+element.user_id+"</p>";
+                });
+			});
+        }
+		async function submitUser() {
+            var fullname = document.getElementById("fullname").value;
+            var age = document.getElementById("age").value;
+			fetch( 'https://8kt8ojhp10.execute-api.us-east-1.amazonaws.com/v8/users',  {
+                method: 'POST',
+                body: JSON.stringify({
+                    "fullname": fullname,
+                    "age": age
+                })
+			})
+			.then(response => response.json())
+			.then((response) => {
+				console.log(response);
+                document.getElementById("user_id").innerHTML += "<p>"+user_id+"</p>"; // Add new message to message list
+			});
+		}
+        getUsers(); // Calls get message on load
+    </script>   
+    <head>  
+        <title>Test Form</title>
+    </head>
+    <body>
+        <form onsubmit="submitUser()">
+            <label for="fullname">Full Name:</label><br>
+            <input type="text" id="fullname" name="fullname" value=""/><br>
+            <label for="age">age:</label><br>
+            <input type="text" id="age" name="age" value=""/><br>
+            <input type="submit" value="Submit">
+      </form> 
+      <strong>Users from DynamoDB</strong>
+      <div id="user_id">
+
+      </div>
+	</body>
+</html>
