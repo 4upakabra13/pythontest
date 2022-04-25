@@ -3,15 +3,18 @@ const ddb = new AWS.DynamoDB.DocumentClient({region: 'us-east-1'});
 
 exports.handler = async (event, context, callback) => {
   await readUser().then(data => {
-    data.Items.forEach(function(item) {
-      console.log(item);
-    });
-    callback(null, {
-        statusCode:200,
+    data.Items.forEach(function(item) {});
+    if (data.Items.length === 0) {
+      callback('404');}
+      else
+        {callback(null, {
         body: data.Items
-        });
+        });};
+    // callback(null, {
+    //     body: data.Items
+    //     });
   }).catch((error) => {
-    console.log('404');
+    console.log(error);
   });
 };
 
