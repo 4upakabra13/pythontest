@@ -10,9 +10,6 @@ exports.handler = async (event, context, callback) => {
         {callback(null, {
         body: data.Items
         });};
-    // callback(null, {
-    //     body: data.Items
-    //     });
   }).catch((error) => {
     console.log(error);
   });
