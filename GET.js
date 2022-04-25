@@ -8,21 +8,24 @@ exports.handler = async (event, context, callback) => {
     });
     callback(null, {
         statusCode:200,
-        body: data.Items,
-        headers: {
-        'Access-Control-Allow-Origin' : '*'
-        },
+        body: data.Items
         });
-  }).catch((err) => {
-    console.error(err);
+  }).catch((error) => {
+    console.log('404');
   });
 };
 
 function readUser() {
   const params = {
     TableName: "users",
-    limit:50
-    
+    KeyConditionExpression: "#user_id = :user_id",
+    ExpressionAttributeNames:{
+        "#user_id": "user_id"
+        },
+    ExpressionAttributeValues: {
+      // insert a user_id here
+        ":user_id":"b4e31168-0059-419a-965c-8a60b54ca6d4"
+        }
   };
- return ddb.scan(params).promise();
+ return ddb.query(params).promise();
 }
